@@ -168,6 +168,42 @@ app.patch("/api/vehicles/:id", async (req, res) => {
     }
 });
 
+app.delete("/api/vehicles/:id", async (req, res) => {
+    try {
+        const paramsValidation = vehicleIdSchema.safeParse(req.params);
+
+        if (!paramsValidation.success) {
+            return res.status(400).json({
+                message: "Invalid vehicle ID",
+                errors: paramsValidation.error.issues.map((issue) => ({
+                    field: issue.path.join("."),
+                    message: issue.message,
+                })),
+            });
+        }
+
+        const { id } = paramsValidation.data;
+
+        await prisma.vehicle.delete({
+            where: { id },
+        });
+
+        return res.status(204).send();
+    } catch (error) {
+        if (error.code === "P2025") {
+            return res.status(404).json({
+                message: "Vehicle not found",
+            });
+        }
+
+        console.error("Delete vehicle error:", error);
+
+        return res.status(500).json({
+            message: "Internal server error",
+        });
+    }
+});
+
 // Start server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
