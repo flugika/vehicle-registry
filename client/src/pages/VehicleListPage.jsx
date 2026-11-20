@@ -3,61 +3,18 @@ import { useState, useEffect, useRef } from 'react'
 import { listVehicles } from '../api/vehicles'
 
 import { getErrorMessage } from '../api/errors';
-import { Table } from 'antd'
+import { Button, Table, Space } from 'antd'
 import { Link } from 'react-router-dom';
 import { useLocation, useNavigate } from "react-router-dom";
-import { message } from "antd";
+import { message, Popconfirm } from "antd";
+import { deleteVehicle } from '../api/vehicles';
+import Header from '../components/Header'
 
 const showValue = (value) => value ?? "–";
 
-const COLUMNS = [
-    {
-        title: 'Registration Number',
-        dataIndex: 'registrationNumber',
-        key: 'registrationNumber',
-    },
-    {
-        title: 'Brand',
-        dataIndex: 'brand',
-        key: 'brand',
-    },
-    {
-        title: 'Model',
-        dataIndex: 'model',
-        key: 'model',
-    },
-    {
-        title: 'Color',
-        dataIndex: 'color',
-        key: 'color',
-        render: showValue,
-    },
-    {
-        title: 'Year',
-        dataIndex: 'year',
-        key: 'year',
-        render: showValue,
-    },
-    {
-        title: 'Notes',
-        dataIndex: 'notes',
-        ellipsis: true,
-        width: 240,
-        key: 'notes',
-        render: showValue,
-    },
-    {
-        title: '',
-        dataIndex: 'action',
-        key: 'action',
-        render: (_, record) => (
-            <Link to={`/vehicles/${record.id}/edit`}>Edit</Link>
-        )
-    }
-]
-
 export default function VehicleListPage() {
     const [vehicles, setVehicles] = useState([]);
+    const [deleting, setDeleting] = useState(false);
     const [loading, setLoading] = useState(true);
     const [errMsg, setErrMsg] = useState("");
 
@@ -66,6 +23,61 @@ export default function VehicleListPage() {
     const navigate = useNavigate();
 
     const hasShownMessage = useRef(false);
+
+    const COLUMNS = [
+        {
+            title: 'Registration Number',
+            dataIndex: 'registrationNumber',
+            key: 'registrationNumber',
+        },
+        {
+            title: 'Brand',
+            dataIndex: 'brand',
+            key: 'brand',
+        },
+        {
+            title: 'Model',
+            dataIndex: 'model',
+            key: 'model',
+        },
+        {
+            title: 'Color',
+            dataIndex: 'color',
+            key: 'color',
+            render: showValue,
+        },
+        {
+            title: 'Year',
+            dataIndex: 'year',
+            key: 'year',
+            render: showValue,
+        },
+        {
+            title: 'Notes',
+            dataIndex: 'notes',
+            ellipsis: true,
+            width: 240,
+            key: 'notes',
+            render: showValue,
+        },
+        {
+            title: '',
+            dataIndex: 'action',
+            key: 'action',
+            render: (_, record) => (
+                <div style={{ display: "flex", gap: 2 }}>
+                    <Link to={`/vehicles/${record.id}/edit`}><Button>Edit</Button></Link>
+                    <Popconfirm
+                        title={`Delete ${record.registrationNumber}?`}
+                        onConfirm={() => handleDelete(record)}
+                        okButtonProps={"danger: true"}
+                    >
+                        <Button type='danger' loading={deleting}>Delete</Button>
+                    </Popconfirm>
+                </div >
+            )
+        }
+    ]
 
     useEffect(() => {
         if (location.state?.successMessage && !hasShownMessage.current) {
@@ -92,6 +104,22 @@ export default function VehicleListPage() {
         }
     }
 
+    async function handleDelete(record) {
+        setDeleting(true);
+        setErrMsg("");
+
+        try {
+            await deleteVehicle(record.id);
+            fetchListVehicles();
+            messageApi.success(`Deleted vehicle ${record.registrationNumber}`);
+        } catch (error) {
+            console.error('Failed to delete vehicles:', error);
+            setErrMsg(getErrorMessage(error));
+        } finally {
+            setDeleting(false);
+        }
+    }
+
     useEffect(() => {
         fetchListVehicles();
     }, []);
@@ -104,18 +132,21 @@ export default function VehicleListPage() {
         content = (
             <div>
                 <p>{errMsg}</p>
-                <button onClick={fetchListVehicles}>
+                <Button type='primary' onClick={fetchListVehicles}>
                     Retry
-                </button>
+                </Button>
             </div>
         );
     } else if (vehicles.length === 0) {
         content = (
-            <div>
+            <div >
                 <p>No vehicles found.</p>
-                <Link to={{ pathname: "/vehicles/new", }}>
-                    Add new Vehicle - <button>Add</button>
-                </Link>
+                <div style={{ display: "flex", gap: 4 }}>
+                    Add new Vehicle -
+                    <Link to={{ pathname: "/vehicles/new", }}>
+                        <Button type='primary'>Add</Button>
+                    </Link>
+                </div>
             </div>
         );
     } else {
@@ -129,12 +160,17 @@ export default function VehicleListPage() {
     return (
         <div>
             {contextHolder}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <h1>Vehicles</h1>
-                <Link to={{ pathname: "/vehicles/new", }}>
-                    <button>Add</button>
-                </Link>
-            </div>
+            <Header
+                title="Vehicles"
+                actions={
+                    <Space>
+                        <Link to={{ pathname: "/vehicles/new", }}>
+                            <Button type='primary'>Add</Button>
+                        </Link>
+                    </Space>
+                }
+                showBack={false}
+            />
             {content}
         </div>
     );

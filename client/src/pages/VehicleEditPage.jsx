@@ -4,6 +4,7 @@ import { getErrorMessage } from "../api/errors";
 import { Form, Input, DatePicker, Button } from 'antd';
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from 'dayjs'
+import Header from "../components/Header";
 
 export const MIN_YEAR = 1886;
 export const MAX_YEAR = 2100;
@@ -51,7 +52,6 @@ export default function VehicleEditPage() {
                 ...res,
                 year: res.year ? dayjs(String(res.year)) : null,
             })
-            console.log(res)
         } catch (error) {
             console.error('Failed to fetch vehicle:', error);
             setErrMsg(getErrorMessage(error));
@@ -66,9 +66,7 @@ export default function VehicleEditPage() {
 
     return (
         <div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <h1>Edit Vehicle</h1>
-            </div>
+            <Header title={"Edit Vehicle"}></Header>
             <Form
                 form={form}
                 name="basic"
@@ -117,9 +115,11 @@ export default function VehicleEditPage() {
                     <Input />
                 </Form.Item>
 
-                <Button type="primary" htmlType="submit" loading={saving} disabled={loading}>
-                    Submit
-                </Button>
+                <Form.Item wrapperCol={{ span: 24 }} style={{ textAlign: "right" }}>
+                    <Button type="primary" htmlType="submit" loading={saving} disabled={loading}>
+                        Submit
+                    </Button>
+                </Form.Item>
             </Form>
             {errMsg !== "" && <p>{errMsg}</p>}
         </div>

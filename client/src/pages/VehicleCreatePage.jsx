@@ -3,6 +3,7 @@ import { createVehicle } from "../api/vehicles";
 import { getErrorMessage } from "../api/errors";
 import { Form, Input, DatePicker, Button } from 'antd';
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
 
 export const MIN_YEAR = 1886;
 export const MAX_YEAR = 2100;
@@ -40,9 +41,7 @@ export default function VehicleCreatePage() {
 
     return (
         <div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <h1>New Vehicle</h1>
-            </div>
+            <Header title={"New Vehicle"}></Header>
             <Form
                 name="basic"
                 labelCol={{ span: 8 }}
@@ -90,9 +89,11 @@ export default function VehicleCreatePage() {
                     <Input />
                 </Form.Item>
 
-                <Button type="primary" htmlType="submit" loading={saving}>
-                    Submit
-                </Button>
+                <Form.Item wrapperCol={{ span: 24 }} style={{ textAlign: "right" }}>
+                    <Button type="primary" htmlType="submit" loading={saving}>
+                        Submit
+                    </Button>
+                </Form.Item>
             </Form>
             {errMsg !== "" && <p>{errMsg}</p>}
         </div>
