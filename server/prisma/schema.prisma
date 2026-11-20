@@ -11,3 +11,15 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Vehicle {
+  id                 Int      @id @default(autoincrement())
+  registrationNumber String   @unique
+  brand              String
+  model              String
+  notes              String?
+  year               Int?
+  color              String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
