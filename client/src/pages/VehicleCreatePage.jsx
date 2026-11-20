@@ -2,32 +2,39 @@ import { useState } from "react";
 import { createVehicle } from "../api/vehicles";
 import { getErrorMessage } from "../api/errors";
 import { Form, Input, DatePicker, Button } from 'antd';
+import { useNavigate } from "react-router-dom";
 
 export const MIN_YEAR = 1886;
 export const MAX_YEAR = 2100;
 
 export default function VehicleCreatePage() {
-    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+    const [saving, setSaving] = useState(false);
     const [errMsg, setErrMsg] = useState("");
-    const [isSubmitted, setIsSubmitted] = useState(false);
 
     async function SubmitVehicle(values) {
-        setLoading(true);
+        setSaving(true);
         setErrMsg("");
 
         try {
             const payload = {
                 ...values,
+                color: values.color?.trim() || null,
                 year: values.year ? values.year.year() : null,
+                notes: values.notes?.trim() || null,
             }
             await createVehicle(payload);
-            setIsSubmitted(true);
+            navigate("/vehicles", {
+                state: {
+                    successMessage: `Create new vehicle ${values.registrationNumber}`,
+                },
+            });
         } catch (error) {
             console.error('Failed to create new vehicle:', error);
             setErrMsg(getErrorMessage(error));
         } finally {
-            setLoading(false);
-            setIsSubmitted(false)
+            setSaving(false);
         }
     }
 
@@ -68,17 +75,9 @@ export default function VehicleCreatePage() {
                 <Form.Item
                     label="Color"
                     name="color"
-                    rules={[{ required: true, message: 'color is required!' }]}
                 >
                     <Input />
                 </Form.Item>
-                {/* <Form.Item
-                    label="Year"
-                    name="year"
-                    rules={[{ required: true, message: 'year is required!' }]}
-                >
-                    <Input />
-                </Form.Item> */}
                 <Form.Item label="Year" name="year">
                     <DatePicker
                         picker="year"
@@ -87,16 +86,14 @@ export default function VehicleCreatePage() {
                 <Form.Item
                     label="Notes"
                     name="notes"
-                    rules={[{ required: true, message: 'notes is required!' }]}
                 >
                     <Input />
                 </Form.Item>
 
-                <Button type="primary" htmlType="submit" loading={loading}>
+                <Button type="primary" htmlType="submit" loading={saving}>
                     Submit
                 </Button>
             </Form>
-            {isSubmitted && <p>Submitted</p>}
             {errMsg !== "" && <p>{errMsg}</p>}
         </div>
     )
