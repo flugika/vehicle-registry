@@ -2,7 +2,7 @@ import { apiFetch } from "./client";
 
 const BASE = "/vehicles";
 
-export async function listVehicle() {
+export async function listVehicles() {
     return apiFetch(BASE);
 }
 
