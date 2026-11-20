@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { prisma } from "./prisma.js";
-import { createVehicleSchema, vehicleIdSchema } from "./schemas/vehicle.schema.js";
+import { createVehicleSchema, updateVehicleSchema, vehicleIdSchema } from "./schemas/vehicle.schema.js";
 
 dotenv.config();
 
@@ -13,12 +13,10 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3001;
 
-// Health check
 app.get("/api/health", (req, res) => {
     res.json({ status: "ok" });
 });
 
-// Get all vehicles
 app.get("/api/vehicles", async (req, res) => {
     try {
         const vehicles = await prisma.vehicle.findMany({
@@ -27,8 +25,7 @@ app.get("/api/vehicles", async (req, res) => {
                 { id: "desc" },
             ]
         });
-        // Sort by auto-increment ID to ensure a consistent order,
-        // as multiple records may share the same createdAt timestamp.
+        // Sort by creation date, using ID as a tie-breaker when timestamps are the same.
 
         return res.status(200).json({
             data: vehicles,
@@ -42,7 +39,6 @@ app.get("/api/vehicles", async (req, res) => {
     }
 });
 
-// Get vehicle by ID
 app.get("/api/vehicles/:id", async (req, res) => {
     try {
         const validation = vehicleIdSchema.safeParse(req.params);
@@ -81,7 +77,6 @@ app.get("/api/vehicles/:id", async (req, res) => {
     }
 });
 
-// Create vehicle
 app.post("/api/vehicles", async (req, res) => {
     try {
         const validation = createVehicleSchema.safeParse(req.body);
@@ -101,7 +96,6 @@ app.post("/api/vehicles", async (req, res) => {
         });
 
         return res.status(201).json({
-            message: "Vehicle created successfully",
             data: vehicle,
         });
     } catch (error) {
@@ -112,6 +106,61 @@ app.post("/api/vehicles", async (req, res) => {
         }
 
         console.error("Create vehicle error:", error);
+
+        return res.status(500).json({
+            message: "Internal server error",
+        });
+    }
+});
+
+app.patch("/api/vehicles/:id", async (req, res) => {
+    try {
+        const paramsValidation = vehicleIdSchema.safeParse(req.params);
+
+        if (!paramsValidation.success) {
+            return res.status(400).json({
+                message: "Invalid vehicle ID",
+                errors: paramsValidation.error.issues.map((issue) => ({
+                    field: issue.path.join("."),
+                    message: issue.message,
+                })),
+            });
+        }
+
+        const { id } = paramsValidation.data;
+        const validation = updateVehicleSchema.safeParse(req.body);
+
+        if (!validation.success) {
+            return res.status(400).json({
+                message: "Invalid request data",
+                errors: validation.error.issues.map((issue) => ({
+                    field: issue.path.join("."),
+                    message: issue.message,
+                })),
+            });
+        }
+
+        const vehicle = await prisma.vehicle.update({
+            data: validation.data,
+            where: { id },
+        });
+
+        return res.status(200).json({
+            data: vehicle,
+        });
+    } catch (error) {
+        if (error.code === "P2025") {
+            return res.status(404).json({
+                message: "Vehicle not found",
+            });
+        }
+        if (error.code === "P2002") {
+            return res.status(409).json({
+                message: "Vehicle registration number already exists",
+            });
+        }
+
+        console.error("Update vehicle error:", error);
 
         return res.status(500).json({
             message: "Internal server error",
