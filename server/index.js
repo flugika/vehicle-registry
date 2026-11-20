@@ -17,8 +17,21 @@ app.get("/api/health", (req, res) => {
 });
 
 app.get("/api/vehicles", async (req, res) => {
-    const vehicle = await prisma.vehicle.findMany();
-    res.json(vehicle);
+    try {
+        const vehicle = await prisma.vehicle.findMany({ orderBy: { "id": "desc" } });
+        // order by id because id is  autoincrement and the most num is the lastest row created
+        // case createdAt same milli second cant compare sequence
+
+        return res.status(200).json({
+            data: vehicle
+        })
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            message: "เกิดข้อผิดพลาดภายในเซิร์ฟเวอร์",
+        });
+    }
 });
 
 app.post("/api/vehicles", async (req, res) => {
