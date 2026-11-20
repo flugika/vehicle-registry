@@ -54,21 +54,21 @@ export default function VehicleCreatePage() {
                 <Form.Item
                     label="Registration number"
                     name="registrationNumber"
-                    rules={[{ required: true, message: 'Registration number is required!' }]}
+                    rules={[{ required: true, whitespace: true, message: 'Registration number is required!' }]}
                 >
                     <Input />
                 </Form.Item>
                 <Form.Item
                     label="Brand"
                     name="brand"
-                    rules={[{ required: true, message: 'Brand is required!' }]}
+                    rules={[{ required: true, whitespace: true, message: 'Brand is required!' }]}
                 >
                     <Input />
                 </Form.Item>
                 <Form.Item
                     label="Model"
                     name="model"
-                    rules={[{ required: true, message: 'model is required!' }]}
+                    rules={[{ required: true, whitespace: true, message: 'model is required!' }]}
                 >
                     <Input />
                 </Form.Item>

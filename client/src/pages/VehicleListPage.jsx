@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import { listVehicles } from '../api/vehicles'
 
 import { getErrorMessage } from '../api/errors';
 import { Table } from 'antd'
 import { Link } from 'react-router-dom';
+import { useLocation, useNavigate } from "react-router-dom";
+import { message } from "antd";
 
 const showValue = (value) => value ?? "–";
 
@@ -44,12 +46,36 @@ const COLUMNS = [
         key: 'notes',
         render: showValue,
     },
+    {
+        title: '',
+        dataIndex: 'action',
+        key: 'action',
+        render: (_, record) => (
+            <Link to={`/vehicles/${record.id}/edit`}>Edit</Link>
+        )
+    }
 ]
 
 export default function VehicleListPage() {
     const [vehicles, setVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [errMsg, setErrMsg] = useState("");
+
+    const [messageApi, contextHolder] = message.useMessage();
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const hasShownMessage = useRef(false);
+
+    useEffect(() => {
+        if (location.state?.successMessage && !hasShownMessage.current) {
+            hasShownMessage.current = true;
+
+            messageApi.success(location.state.successMessage);
+
+            navigate(location.pathname, { replace: true, state: null });
+        }
+    }, [location, messageApi, navigate]);
 
     async function fetchListVehicles() {
         setLoading(true);
@@ -102,12 +128,12 @@ export default function VehicleListPage() {
 
     return (
         <div>
+            {contextHolder}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <h1>Vehicles</h1>
                 <Link to={{ pathname: "/vehicles/new", }}>
                     <button>Add</button>
                 </Link>
-
             </div>
             {content}
         </div>
