@@ -1,0 +1,162 @@
+[
+    {
+        "registrationNumber": "กข 1234",
+        "brand": "Toyota",
+        "model": "Camry",
+        "year": 2020,
+        "color": "White",
+        "notes": "รถผู้บริหาร"
+    },
+    {
+        "registrationNumber": "ฮฮ 5678",
+        "brand": "Honda",
+        "model": "Civic",
+        "year": 2019,
+        "color": "Black",
+        "notes": null
+    },
+    {
+        "registrationNumber": "1กก 9999",
+        "brand": "Mazda",
+        "model": "CX-5",
+        "year": 2022,
+        "color": "Red",
+        "notes": "ครบกำหนดตรวจสภาพเดือนหน้า"
+    },
+    {
+        "registrationNumber": "2ขข 1001",
+        "brand": "Isuzu",
+        "model": "D-Max",
+        "year": 2021,
+        "color": "Silver",
+        "notes": "รถกระบะส่งของ"
+    },
+    {
+        "registrationNumber": "3คค 2002",
+        "brand": "Nissan",
+        "model": "Almera",
+        "year": 2018,
+        "color": "Gray",
+        "notes": null
+    },
+    {
+        "registrationNumber": "4งง 3003",
+        "brand": "Ford",
+        "model": "Ranger",
+        "year": 2023,
+        "color": "Blue",
+        "notes": "ใช้งานต่างจังหวัด"
+    },
+    {
+        "registrationNumber": "5จจ 4004",
+        "brand": "Mitsubishi",
+        "model": "Pajero Sport",
+        "year": 2020,
+        "color": "Black",
+        "notes": null
+    },
+    {
+        "registrationNumber": "6ฉฉ 5005",
+        "brand": "Toyota",
+        "model": "Hilux Revo",
+        "year": 2017,
+        "color": "White",
+        "notes": "ประกันหมดอายุ ธ.ค."
+    },
+    {
+        "registrationNumber": "7ชช 6006",
+        "brand": "Suzuki",
+        "model": "Swift",
+        "year": 2022,
+        "color": "Orange",
+        "notes": null
+    },
+    {
+        "registrationNumber": "8ซซ 7007",
+        "brand": "MG",
+        "model": "ZS",
+        "year": 2021,
+        "color": "Green",
+        "notes": "รถสำรอง"
+    },
+    {
+        "registrationNumber": "9ญญ 8008",
+        "brand": "BMW",
+        "model": "320d",
+        "year": 2019,
+        "color": "Black",
+        "notes": "รถรับรองลูกค้า"
+    },
+    {
+        "registrationNumber": "กง 1111",
+        "brand": "Mercedes-Benz",
+        "model": "C220",
+        "year": 2018,
+        "color": "Silver",
+        "notes": null
+    },
+    {
+        "registrationNumber": "ขต 2222",
+        "brand": "Honda",
+        "model": "HR-V",
+        "year": 2023,
+        "color": "White",
+        "notes": "ส่งซ่อมแอร์ล่าสุด 10/2026"
+    },
+    {
+        "registrationNumber": "คท 3333",
+        "brand": "Toyota",
+        "model": "Yaris Ativ",
+        "year": 2022,
+        "color": "Red",
+        "notes": null
+    },
+    {
+        "registrationNumber": "งน 4444",
+        "brand": "Mazda",
+        "model": "Mazda2",
+        "year": 2020,
+        "color": "Blue",
+        "notes": null
+    },
+    {
+        "registrationNumber": "จบ 5555",
+        "brand": "Nissan",
+        "model": "Navara",
+        "year": 2019,
+        "color": null,
+        "notes": "ไม่ระบุสี (ทดสอบ null)"
+    },
+    {
+        "registrationNumber": "ฉป 6666",
+        "brand": "Isuzu",
+        "model": "MU-X",
+        "year": null,
+        "color": "Gray",
+        "notes": "ไม่ระบุปี (ทดสอบ null)"
+    },
+    {
+        "registrationNumber": "ชผ 7777",
+        "brand": "Tesla",
+        "model": "Model 3",
+        "year": 2024,
+        "color": "White",
+        "notes": "รถไฟฟ้า"
+    },
+    {
+        "registrationNumber": "ซพ 8888",
+        "brand": "BYD",
+        "model": "Atto 3",
+        "year": 2024,
+        "color": "Blue",
+        "notes": "รถไฟฟ้า ชาร์จที่ลานจอดชั้น B1"
+    },
+    {
+        "registrationNumber": "ญม 9999",
+        "brand": "Toyota",
+        "model": "Fortuner",
+        "year": 2021,
+        "color": "Black",
+        "notes": "ข้อความยาว ๆ สำหรับทดสอบ ellipsis ในคอลัมน์ Notes: รถคันนี้ใช้สำหรับเดินทางไปตรวจโครงการต่างจังหวัดบ่อย ต้องตรวจเช็กระยะทุก 10,000 กม. และตรวจสภาพยางก่อนออกเดินทางทุกครั้ง"
+    }
+]
