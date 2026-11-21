@@ -12,9 +12,14 @@
 - Database: PostgreSQL
 - Tests: Vitest, Supertest
 
+## สิ่งที่ต้องมี
+
+- Node.js 22.12 ขึ้นไป
+- Docker (ใช้เปิด PostgreSQL เท่านั้น)
+
 ## วิธีรัน
 
-**1. เปิด database** (ต้องมี Docker)
+**1. เปิด database**
 
 ```bash
 docker run --name vehicle-db -e POSTGRES_PASSWORD=devpassword -e POSTGRES_DB=vehicles -p 5433:5432 -d postgres
@@ -35,9 +40,13 @@ PORT=3001
 ```
 
 ```bash
+npx prisma generate
 npx prisma migrate dev
 npm run dev
 ```
+
+- `prisma generate` สร้าง Prisma Client ลงโฟลเดอร์ `server/generated/prisma` (ต้องรันหลัง clone และทุกครั้งที่แก้ `schema.prisma`)
+- `prisma migrate dev` สร้างตารางในฐานข้อมูลตามโฟลเดอร์ `prisma/migrations`
 
 **3. Frontend**
 
@@ -82,12 +91,16 @@ npm install
 npm test
 ```
 
-ไม่ต้องเปิด Docker, ไม่ต้องมี `.env` และไม่ต้องเปิด backend เพราะ API tests mock Prisma ไว้ จึงไม่แตะฐานข้อมูลจริง
+ไม่ต้องเปิด Docker, ไม่ต้องมี `.env`, ไม่ต้องรัน `prisma generate` และไม่ต้องเปิด backend เพราะ API tests mock Prisma ไว้ จึงไม่แตะฐานข้อมูลจริง
 
 มีทั้งหมด 14 tests
 
 - `tests/vehicle.schema.test.js` (4): ทดสอบ Zod schema ของ create และ update
 - `tests/vehicles.api.test.js` (10): ทดสอบ GET / POST / PATCH / DELETE `/api/vehicles` ทั้งกรณีสำเร็จและกรณี error (400, 404, 409)
+
+## CI
+
+GitHub Actions (`.github/workflows/ci.yml`) จะทำงานเมื่อ push หรือเปิด Pull Request ไปยัง `main` โดยรัน backend tests และ build frontend ให้อัตโนมัติ
 
 ## API
 
@@ -99,6 +112,8 @@ npm test
 - ตรวจข้อมูลทั้งฝั่งหน้าเว็บและ server
 - ลบรถจะมีให้กดยืนยันก่อน
 
+## โครงสร้างโปรเจกต์
+
 ```
 vehicle-registry
 ├─ client
@@ -109,7 +124,6 @@ vehicle-registry
 │  ├─ public
 │  │  ├─ favicon.svg
 │  │  └─ icons.svg
-│  ├─ README.md
 │  ├─ src
 │  │  ├─ api
 │  │  │  ├─ client.js
@@ -162,4 +176,5 @@ vehicle-registry
    │  ├─ vehicle.schema.test.js
    │  └─ vehicles.api.test.js
    └─ vitest.config.js
+
 ```
