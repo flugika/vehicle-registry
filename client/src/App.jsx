@@ -6,12 +6,16 @@ import VehicleListPage from './pages/VehicleListPage'
 
 export default function App() {
   return (
-    <Routes>
-      <Route path='/' element={<VehicleListPage />}></Route>
-      <Route path='/vehicles' element={<VehicleListPage />}></Route>
-      <Route path='/vehicles/new' element={<VehicleCreatePage />}></Route>
-      <Route path='/vehicles/:id/edit' element={<VehicleEditPage />}></Route>
-      <Route path="*" element={<p>Page not found</p>} />
-    </Routes>
+    <div className="app-shell">
+      <main className="page-container">
+        <Routes>
+          <Route path='/' element={<VehicleListPage />} />
+          <Route path='/vehicles' element={<VehicleListPage />} />
+          <Route path='/vehicles/new' element={<VehicleCreatePage />} />
+          <Route path='/vehicles/:id/edit' element={<VehicleEditPage />} />
+          <Route path="*" element={<p>Page not found</p>} />
+        </Routes>
+      </main>
+    </div>
   )
 }

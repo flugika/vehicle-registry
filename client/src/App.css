@@ -1,0 +1,256 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    font-family: Inter, "Segoe UI", Tahoma, sans-serif;
+    color: #1e293b;
+    background: #f1f5f9;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+.app-shell {
+    min-height: 100vh;
+    padding: 40px 24px;
+}
+
+.page-container {
+    width: 100%;
+    max-width: 1100px;
+    min-height: 500px;
+    margin: 0 auto;
+    padding: 28px 32px 36px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+.page-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.page-header-back {
+    min-height: 32px;
+    margin-bottom: 4px;
+}
+
+.back-button.ant-btn {
+    margin-left: -12px;
+    padding: 0 12px;
+    color: #64748b;
+}
+
+.back-button.ant-btn:hover {
+    color: #0f172a;
+    background: #f1f5f9 !important;
+}
+
+.page-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.page-header h1 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.page-header p {
+    margin: 2px 0 0;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.ant-form {
+    max-width: 640px;
+}
+
+.ant-form-item {
+    margin-bottom: 20px;
+}
+
+.ant-form-item-label>label {
+    color: #334155 !important;
+    font-weight: 500;
+}
+
+.ant-input,
+.ant-picker {
+    min-height: 40px;
+    border-radius: 8px;
+}
+
+textarea.ant-input {
+    min-height: auto;
+}
+
+.ant-input:hover,
+.ant-picker:hover {
+    border-color: #94a3b8;
+}
+
+.ant-input:focus,
+.ant-picker-focused {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.ant-btn {
+    min-height: 38px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.ant-btn-primary {
+    background: #2563eb;
+    box-shadow: none;
+}
+
+.ant-btn-primary:hover {
+    background: #1d4ed8 !important;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 8px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.ant-table-wrapper {
+    width: 100%;
+    margin-top: 0;
+}
+
+.ant-table {
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.ant-table-thead>tr>th {
+    color: #475569 !important;
+    background: #f8fafc !important;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.ant-table-tbody>tr>td {
+    color: #334155;
+}
+
+.ant-table-tbody>tr:hover>td {
+    background: #f8fafc !important;
+}
+
+.reg-number {
+    font-weight: 600;
+    color: #0f172a;
+    white-space: nowrap;
+}
+
+.row-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.row-actions .ant-btn {
+    min-height: 32px;
+    padding: 0 14px;
+}
+
+.error-message {
+    margin: 0 0 16px;
+    padding: 10px 14px;
+    color: #b91c1c;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.page-status {
+    padding: 56px 16px;
+    color: #64748b;
+    text-align: center;
+}
+
+.page-status .error-message {
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto 16px;
+}
+
+@media (max-width: 768px) {
+    .app-shell {
+        padding: 20px 12px;
+    }
+
+    .page-container {
+        min-height: calc(100vh - 40px);
+        padding: 22px 18px 28px;
+    }
+
+    .page-header h1 {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 480px) {
+    .app-shell {
+        padding: 0;
+    }
+
+    .page-container {
+        min-height: 100vh;
+        padding: 18px 16px 28px;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .page-header-content {
+        align-items: center;
+    }
+
+    .form-actions .ant-btn {
+        flex: 1;
+    }
+}
+
+.page-container:has(.ant-form) {
+    max-width: 720px;
+    min-height: auto;
+}
+
+.page-container:has(.ant-form) .ant-form {
+    max-width: none;
+}
+
+@media (max-width: 480px) {
+    .page-container:has(.ant-form) {
+        min-height: 100vh;
+    }
+}

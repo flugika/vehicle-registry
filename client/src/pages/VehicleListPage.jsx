@@ -3,7 +3,8 @@ import { useState, useEffect, useRef } from 'react'
 import { listVehicles } from '../api/vehicles'
 
 import { getErrorMessage } from '../api/errors';
-import { Button, Table, Space } from 'antd'
+import { Button, Table, Space, Empty, Spin } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom';
 import { useLocation, useNavigate } from "react-router-dom";
 import { message, Popconfirm } from "antd";
@@ -17,6 +18,7 @@ export default function VehicleListPage() {
     const [deleting, setDeleting] = useState(false);
     const [loading, setLoading] = useState(true);
     const [errMsg, setErrMsg] = useState("");
+    const [deletingId, setDeletingId] = useState(null);
 
     const [messageApi, contextHolder] = message.useMessage();
     const location = useLocation();
@@ -26,9 +28,11 @@ export default function VehicleListPage() {
 
     const COLUMNS = [
         {
-            title: 'Registration Number',
+            title: 'Registration No.',
             dataIndex: 'registrationNumber',
             key: 'registrationNumber',
+            width: 150,
+            render: (value) => <span className="reg-number">{value}</span>,
         },
         {
             title: 'Brand',
@@ -50,13 +54,14 @@ export default function VehicleListPage() {
             title: 'Year',
             dataIndex: 'year',
             key: 'year',
+            width: 90,
             render: showValue,
         },
         {
             title: 'Notes',
             dataIndex: 'notes',
             ellipsis: true,
-            width: 240,
+            width: 220,
             key: 'notes',
             render: showValue,
         },
@@ -64,15 +69,23 @@ export default function VehicleListPage() {
             title: '',
             dataIndex: 'action',
             key: 'action',
+            width: 170,
             render: (_, record) => (
-                <div style={{ display: "flex", gap: 2 }}>
+                <div className="row-actions">
                     <Link to={`/vehicles/${record.id}/edit`}><Button>Edit</Button></Link>
                     <Popconfirm
                         title={`Delete ${record.registrationNumber}?`}
                         onConfirm={() => handleDelete(record)}
-                        okButtonProps={"danger: true"}
+                        okButtonProps={{ danger: true }}
+                        disabled={deletingId !== null && deletingId !== record.id}
                     >
-                        <Button type='danger' loading={deleting}>Delete</Button>
+                        <Button
+                            danger
+                            loading={deletingId === record.id}
+                            disabled={deletingId !== null && deletingId !== record.id}
+                        >
+                            Delete
+                        </Button>
                     </Popconfirm>
                 </div >
             )
@@ -105,18 +118,18 @@ export default function VehicleListPage() {
     }
 
     async function handleDelete(record) {
-        setDeleting(true);
+        setDeletingId(record.id);
         setErrMsg("");
 
         try {
             await deleteVehicle(record.id);
-            fetchListVehicles();
+            await fetchListVehicles();
             messageApi.success(`Deleted vehicle ${record.registrationNumber}`);
         } catch (error) {
-            console.error('Failed to delete vehicles:', error);
+            console.error('Failed to delete vehicle:', error);
             setErrMsg(getErrorMessage(error));
         } finally {
-            setDeleting(false);
+            setDeletingId(null);
         }
     }
 
@@ -127,11 +140,16 @@ export default function VehicleListPage() {
     let content;
 
     if (loading) {
-        content = <p>Loading vehicles...</p>;
+        content = (
+            <div className="page-status">
+                <Spin />
+                <p>Loading vehicles...</p>
+            </div>
+        );
     } else if (errMsg !== "") {
         content = (
-            <div>
-                <p>{errMsg}</p>
+            <div className="page-status">
+                <p className="error-message">{errMsg}</p>
                 <Button type='primary' onClick={fetchListVehicles}>
                     Retry
                 </Button>
@@ -139,20 +157,24 @@ export default function VehicleListPage() {
         );
     } else if (vehicles.length === 0) {
         content = (
-            <div >
-                <p>No vehicles found.</p>
-                <div style={{ display: "flex", gap: 4 }}>
-                    Add new Vehicle -
+            <div className="page-status">
+                <Empty description="No vehicles found">
                     <Link to={{ pathname: "/vehicles/new", }}>
-                        <Button type='primary'>Add</Button>
+                        <Button type='primary' icon={<PlusOutlined />}>Add vehicle</Button>
                     </Link>
-                </div>
+                </Empty>
             </div>
         );
     } else {
         content = (
             <>
-                <Table columns={COLUMNS} dataSource={vehicles} rowKey="id" />
+                <Table
+                    columns={COLUMNS}
+                    dataSource={vehicles}
+                    rowKey="id"
+                    scroll={{ x: 820 }}
+                    pagination={{ pageSize: 10, hideOnSinglePage: true }}
+                />
             </>
         );
     }
@@ -162,10 +184,11 @@ export default function VehicleListPage() {
             {contextHolder}
             <Header
                 title="Vehicles"
+                description="Manage your vehicles"
                 actions={
                     <Space>
                         <Link to={{ pathname: "/vehicles/new", }}>
-                            <Button type='primary'>Add</Button>
+                            <Button type='primary' icon={<PlusOutlined />}>Add</Button>
                         </Link>
                     </Space>
                 }
